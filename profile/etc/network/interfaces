@@ -1,0 +1,33 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+#iface eth0 inet dhcp
+
+auto wlan0 wlan1
+mapping wlan0 wlan1
+script /usr/share/doc/ifupdown/examples/get-mac-address.sh 
+map  00:13:ef:00:18:a4 wlan_ap
+map  e8:4e:06:45:27:70 wlan_sta
+
+allow-hotplug wlan_sta
+#iface wlan_sta inet manual
+iface wlan_sta inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlan_ap
+#iface wlan_ap inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+iface wlan_ap inet static
+address 192.168.2.222
+netmask 255.255.255.0
+up iptables-restore < /etc/iptables.ipv4.nat
+#gateway 192.168.0.22
