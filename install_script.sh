@@ -118,7 +118,7 @@ sudo chmod 755 /etc/hostapd/hostapd.conf
 sudo chown root:root /etc/hostapd/hostapd.conf
 
 # set mac and configure 
-cd ~/install/scripts/
+cd ${mypath}/scripts/
 sudo ./update_mac.sh
 cd -
 
@@ -140,6 +140,6 @@ sudo chmod 755 /usr/share/applications/toggle-matchbox-keyboard.desktop
 
 # startup system
 sudo cp -a ${mypath}/profile/etc/X11/Xsession.d/100security_launch /etc/X11/Xsession.d/.
-sudo cp -a ${mypath}/profile/etc/security_launch /etc/Xsession.d/.
+sudo cp -a ${mypath}/profile/etc/security_launch /etc/.
 chmod 755 /etc/X11/Xsession.d/100security_launch
 chmod 755 /etc/security_launch
