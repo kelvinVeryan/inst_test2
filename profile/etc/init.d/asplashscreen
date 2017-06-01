@@ -1,0 +1,42 @@
+#!/bin/bash
+# /etc/init.d/asplashscreen : fbi system disaply startup splash
+### BEGIN INIT INFO
+# Provides:          asplashscreen
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:	     
+# Short-Description: Show custom splashscreen
+# Description:	Show custom splashscreen
+### END INIT INFO
+
+set -e
+
+do_start() {
+	/usr/bin/fbi -T 1 -noverbose -a /etc/splash.png
+}
+
+case $1 in
+  start)
+    do_start
+  ;;
+  restart|reload|force-reload)
+    echo "Error: argument $1  no supported"
+    exit -3
+  ;;
+  stop)
+	echo "no op"
+	# no op
+  ;;
+  status)
+	exit 0
+  ;;
+  *)
+    echo "Usage: asplashscreen [start|stop]"
+    exit 3
+    ;;
+esac
+
+exit 0
+
+# vim:set ai et sts=2 sw=2 tw=0:
