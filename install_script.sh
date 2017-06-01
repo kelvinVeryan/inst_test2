@@ -65,7 +65,7 @@ if [ "$dpkgres" -ne "0" ];then
 	sudo apt-get update 
 	sudo apt-get install vim htop iftop vlc browser-plugin-vlc smplayer iperf  -y
 	sudo apt-get install unclutter firefox-esr-l10n-zh-cn python-dev build-essential -y
-	sudo apt-get install hostapd udhcpd -y
+	sudo apt-get install hostapd udhcpd fbi -y
 	sudo apt-get install ttf-wqy-zenhei scim-pinyin ttf-wqy-microhei libmatchbox1 matchbox-keyboard  -y
 	#sudo apt-get install fcitx fcitx-googlepinyin -y
 else 
@@ -143,3 +143,38 @@ sudo cp -a ${mypath}/profile/etc/X11/Xsession.d/100security_launch /etc/X11/Xses
 sudo cp -a ${mypath}/profile/etc/security_launch /etc/.
 chmod 755 /etc/X11/Xsession.d/100security_launch
 chmod 755 /etc/security_launch
+
+# modify startup screeen
+if [ ! -f /usr/share/plymouth/themes/pix/splash_orig.png ];then
+	sudo cp -a /usr/share/plymouth/themes/pix/splash.png /usr/share/plymouth/themes/pix/splash_orig.png
+fi
+sudo cp -a ${mypath}/profile/usr/share/plymouth/themes/pix/splash.png  /usr/share/plymouth/themes/pix/.
+sudo cp -a ${mypath}/profile/usr/share/plymouth/themes/pix/splash.png  /etc/.
+sudo cp -a ${mypath}/profile/etc/init.d/asplashscreen /etc/init.d/.
+chmod 755 /etc/init.d/asplashscreen
+sudo update-rc.d asplashscreen defaults
+cat /boot/config.txt | grep "^disable_splash=1"
+if [ "$?" -eq "0" ];then
+	echo " /boot/config.txt disable_splash=1"
+else
+
+	echo " /boot/config.txt disable_splash need modify"
+	if [ ! -f /boot/config_orig.txt ];then
+		sudo cp -a /boot/config.txt /boot/config_orig.txt
+	fi
+	sudo sh -c 'echo "disable_splash=1" >> /boot/config.txt'
+fi
+cat /boot/cmdline.txt  | grep "logo.nologo"
+if [ "$?" -eq "0" ];then
+	echo " /boot/cmdline.txt nologo is ok"
+else
+	echo " /boot/cmdline.txt need add nologo info"
+	if [ ! -f /boot/cmdline_orig.txt ];then
+		sudo cp -a /boot/cmdline.txt /boot/cmdline_orig.txt
+	fi
+	sudo sh -c 'cat /boot/cmdline.txt | sed "s/$/&\ logo.nologo\ loglevel\=3/g" > /boot/cmdline.txt.tmp'
+	sudo mv /boot/cmdline.txt.tmp  /boot/cmdline.txt
+fi
+
+# update firemare
+#sudo rpi-update
