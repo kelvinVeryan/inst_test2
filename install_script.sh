@@ -176,5 +176,5 @@ else
 	sudo mv /boot/cmdline.txt.tmp  /boot/cmdline.txt
 fi
 
-# update firemare
-#sudo rpi-update
+# update fireware
+sudo rpi-update
